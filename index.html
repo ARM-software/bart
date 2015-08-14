@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>BART by sinkap</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">BART</h1>
+      <h2 class="project-tagline">Behavioural Analysis and Regression Toolkit</h2>
+      <a href="https://github.com/sinkap/bart" class="btn">View on GitHub</a>
+      <a href="https://github.com/sinkap/bart/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/sinkap/bart/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h1>
+
+<p>The Behavioural Analysis and Regression Toolkit is based on <a href="https://github.com/ARM-software/trappy">TRAPpy</a>. The primary goal is to assert behaviours using the FTrace output from the kernel</p>
+
+<h2>
+<a id="target-audience" class="anchor" href="#target-audience" aria-hidden="true"><span class="octicon octicon-link"></span></a>Target Audience</h2>
+
+<p>The framework is designed to cater to a wide range of audience. Aiding developers as well as automating
+the testing of "difficult to test" behaviours.</p>
+
+<h3>
+<a id="kernel-developers" class="anchor" href="#kernel-developers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Kernel Developers</h3>
+
+<p>Making sure that the code that you are writing is doing the right thing.</p>
+
+<h3>
+<a id="performance-engineers" class="anchor" href="#performance-engineers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Performance Engineers</h3>
+
+<p>Plotting/Asserting performance behaviours between different revisions of the kernel</p>
+
+<h3>
+<a id="quality-assurancerelease-engineers" class="anchor" href="#quality-assurancerelease-engineers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quality Assurance/Release Engineers</h3>
+
+<p>Verifying behaviours when different components/patches are integrated</p>
+
+<h1>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h1>
+
+<p>Clone the <a href="https://github.com/ARM-software/bart">BART</a> and <a href="https://github.com/ARM-software/trappy">TRAPpy</a> repos</p>
+
+<pre><code>git clone git@github.com:ARM-software/bart.git
+git clone git@github.com:ARM-software/trappy.git
+</code></pre>
+
+<p>Add the directories to your PYTHONPATH</p>
+
+<pre><code>export PYTHONPATH=$BASE_DIR/bart:$BASE_DIR/trappy:$PYTHONPATH
+</code></pre>
+
+<p>Install dependencies</p>
+
+<pre><code>apt-get install ipython-notebook python-pandas
+</code></pre>
+
+<p><a href="http://ipython.org/notebook.html">IPython</a> notebook is a web based interactive python programming interface.
+It is required if you plan to use interactive plotting in BART.</p>
+
+<h1>
+<a id="trace-analysis-language" class="anchor" href="#trace-analysis-language" aria-hidden="true"><span class="octicon octicon-link"></span></a>Trace Analysis Language</h1>
+
+<p>BART also provides a generic Trace Analysis Language, which allows the user to construct complex relation statements on trace data and assert their expected behaviours. The usage of the Analyzer module can be seen for the thermal behaviours <a href="https://github.com/sinkap/bart/blob/master/notebooks/thermal/Thermal.ipynb">here</a></p>
+
+<h1>
+<a id="scheduler-assertions" class="anchor" href="#scheduler-assertions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Scheduler Assertions</h1>
+
+<p>Enables assertion and the calculation of the following parameters:</p>
+
+<h3>
+<a id="runtime" class="anchor" href="#runtime" aria-hidden="true"><span class="octicon octicon-link"></span></a>Runtime</h3>
+
+<p>The total time that the task spent on a CPU executing.</p>
+
+<h3>
+<a id="switch" class="anchor" href="#switch" aria-hidden="true"><span class="octicon octicon-link"></span></a>Switch</h3>
+
+<p>Assert that a task switched between CPUs/Clusters in a given window of time</p>
+
+<h3>
+<a id="duty-cycle" class="anchor" href="#duty-cycle" aria-hidden="true"><span class="octicon octicon-link"></span></a>Duty Cycle</h3>
+
+<p>The ratio of the execution time to the total time.</p>
+
+<h3>
+<a id="period" class="anchor" href="#period" aria-hidden="true"><span class="octicon octicon-link"></span></a>Period</h3>
+
+<p>The average difference between two switch-in or two switch-out events of a task</p>
+
+<h3>
+<a id="first-cpu" class="anchor" href="#first-cpu" aria-hidden="true"><span class="octicon octicon-link"></span></a>First CPU</h3>
+
+<p>The first CPU that a task ran on.</p>
+
+<h3>
+<a id="residency" class="anchor" href="#residency" aria-hidden="true"><span class="octicon octicon-link"></span></a>Residency</h3>
+
+<p>Calculate and assert the total residency of a task on a CPU or cluster</p>
+
+<h3>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h3>
+
+<p>The Scheduler assertions also use TRAPpy's EventPlot to provide a kernelshark like timeline
+for the tasks under consideration. (in IPython notebooks).</p>
+
+<p>Here is an Example of such a plot:</p>
+
+<p>A notebook explaining the usage of the framework for asserting the deadline scheduler behaviours can be seen <a href="https://rawgit.com/sinkap/0abbcc4918eb228b8887/raw/a1b4d6e0079f4ea0368d595d335bc340616501ff/SchedDeadline.html">here</a></p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/sinkap/bart">BART</a> is maintained by <a href="https://github.com/sinkap">sinkap</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
