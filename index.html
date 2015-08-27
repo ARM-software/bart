@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>Behavioural Analsis and Regression Toolkit</title>
+    <title>Behavioural Analysis and Regression Toolkit</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -22,30 +22,34 @@
 
     <section class="main-content">
       <h1>
-<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h1>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is Behavioural Analysis?</h1>
+
+<p>
+Behavioural Analysis involves the expressing the general expectation of the state of the system while targeting a single or set of heuristics. This is particularly helpful when
+there are large number of factors that can change the behaviour of the system and testing all permutations of these input parameters is impossible. In such a scenario an assertion
+of the final expectation can be useful in managing performance and regression.
+</p>
 
 <p>The Behavioural Analysis and Regression Toolkit is based on <a href="https://github.com/ARM-software/trappy">TRAPpy</a>. The primary goal is to assert behaviours using the FTrace output from the kernel</p>
 
-<h2>
-<a id="target-audience" class="anchor" href="#target-audience" aria-hidden="true"><span class="octicon octicon-link"></span></a>Target Audience</h2>
+<h1>
+<a id="target-audience" class="anchor" href="#target-audience" aria-hidden="true"><span class="octicon octicon-link"></span></a>Target Audience</h1>
 
 <p>The framework is designed to cater to a wide range of audience. Aiding developers as well as automating
 the testing of "difficult to test" behaviours.</p>
+<ul><a id="kernel-developers" class="anchor" href="#kernel-developers" aria-hidden="true"><span class="octicon octicon-link"></span></a><b>Kernel Developers:</b>
+Making sure that the code that you are writing is doing the right thing.
+</ul>
+<ul>
+<a id="performance-engineers" class="anchor" href="#performance-engineers" aria-hidden="true"><span class="octicon octicon-link"></span></a><b>Performance Engineers:</b> Plotting/Asserting performance behaviours between different revisions of the kernel
+</ul>
+<ul>
+<a id="quality-assurancerelease-engineers" class="anchor" href="#quality-assurancerelease-engineers" aria-hidden="true"><span class="octicon octicon-link"></span></a><b>Quality Assurance/Release Engineers: </b> Verifying behaviours when different components/patches are integrated
+</ul>
 
-<h3>
-<a id="kernel-developers" class="anchor" href="#kernel-developers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Kernel Developers</h3>
 
-<p>Making sure that the code that you are writing is doing the right thing.</p>
 
-<h3>
-<a id="performance-engineers" class="anchor" href="#performance-engineers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Performance Engineers</h3>
 
-<p>Plotting/Asserting performance behaviours between different revisions of the kernel</p>
-
-<h3>
-<a id="quality-assurancerelease-engineers" class="anchor" href="#quality-assurancerelease-engineers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quality Assurance/Release Engineers</h3>
-
-<p>Verifying behaviours when different components/patches are integrated</p>
 
 <h1>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h1>
@@ -72,50 +76,38 @@ It is required if you plan to use interactive plotting in BART.</p>
 <h1>
 <a id="trace-analysis-language" class="anchor" href="#trace-analysis-language" aria-hidden="true"><span class="octicon octicon-link"></span></a>Trace Analysis Language</h1>
 
+
 <p>BART also provides a generic Trace Analysis Language, which allows the user to construct complex relation statements on trace data and assert their expected behaviours. The usage of the Analyzer module can be seen for the thermal behaviours <a href="https://github.com/ARM-software/bart/blob/master/notebooks/thermal/Thermal.ipynb">here</a></p>
 
 <h1>
-<a id="scheduler-assertions" class="anchor" href="#scheduler-assertions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Scheduler Assertions</h1>
+<a id="specialized-modules" class="anchor" href="#specialized-modules" aria-hidden="true"><span class="octicon octicon-link"></span></a>Specialized Modules</h1>
+Apart from the generic Trace Analysis Language, BART provides certain subsystem specific assertions. The goal is to increase the specialization across other subsystems within the kernel.
 
-<p>Enables assertion and the calculation of the following parameters:</p>
+<h2>
+<a id="thermal-assertions" class="anchor" href="#thermal-assertions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Thermal Assertions</h2>
+<p>
+This module provides assertions specific to the thermal subsystem and the goal is to assert the temperature control achieved and use these assertions for potential regressions in temperature control.One interesting assertion is, <code>assertThermalResidency</code> which accepts a temperature range and checks if the time spent in the given temperature is between expected limits.
+</p>
+<pre><code>assertThermalResidency(between_threshold,     # A boolean function that compares the
+   					      # result with the expected value
 
-<h3>
-<a id="runtime" class="anchor" href="#runtime" aria-hidden="true"><span class="octicon octicon-link"></span></a>Runtime</h3>
+		       expected_value,	      # Expected value of residency
+					      # in temperature range
 
-<p>The total time that the task spent on a CPU executing.</p>
+		       (low_temp, high_temp)  # Temperature range
+)</code></pre>
 
-<h3>
-<a id="switch" class="anchor" href="#switch" aria-hidden="true"><span class="octicon octicon-link"></span></a>Switch</h3>
 
-<p>Assert that a task switched between CPUs/Clusters in a given window of time</p>
+<h2>
+<a id="scheduler-assertions" class="anchor" href="#scheduler-assertions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Scheduler Assertions</h2>
 
-<h3>
-<a id="duty-cycle" class="anchor" href="#duty-cycle" aria-hidden="true"><span class="octicon octicon-link"></span></a>Duty Cycle</h3>
-
-<p>The ratio of the execution time to the total time.</p>
-
-<h3>
-<a id="period" class="anchor" href="#period" aria-hidden="true"><span class="octicon octicon-link"></span></a>Period</h3>
-
-<p>The average difference between two switch-in or two switch-out events of a task</p>
-
-<h3>
-<a id="first-cpu" class="anchor" href="#first-cpu" aria-hidden="true"><span class="octicon octicon-link"></span></a>First CPU</h3>
-
-<p>The first CPU that a task ran on.</p>
-
-<h3>
-<a id="residency" class="anchor" href="#residency" aria-hidden="true"><span class="octicon octicon-link"></span></a>Residency</h3>
-
-<p>Calculate and assert the total residency of a task on a CPU or cluster</p>
-
-<h3>
-<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h3>
-
-<p>The Scheduler assertions also use TRAPpy's EventPlot to provide a kernelshark like timeline
-for the tasks under consideration. (in IPython notebooks).</p>
-
-<p>Here is an Example of such a plot:</p>
+<p>
+The Linux scheduler is extremely complicated and susceptible to regressions. Fixing or adding one area of the scheduler could have unknown and subtle repercussions
+in a different heuristic. We have added a scheduler specific module which allows the developer to assert and the calculate various parameters like the
+duty cycle, period, execution time, residency over a CPU or a cluster for a test workload. It also features an API assertion to check if a task switched
+between two CPUs/Clusters in a given window of time. Here is a short example to show how it works.
+</p>
+<p>Consider a task, <code>cpuhog</code>, which has alternate phases of high and low duty cycles:</p>
 
 <style>
 
@@ -220,8 +212,39 @@ for the tasks under consideration. (in IPython notebooks).</p>
         </script>
 </div>
 
-<p>Scroll on the Plot area to Zoom. Click and Drag to Pan Zoom</p>
+<p style="font-size: 12px">Scroll on the Plot area to Zoom. Click and Drag to Pan Zoom</p>
 
+<p>
+We have a dual cluster asymmetric hardware. The topology can be expressed as:
+
+</p>
+<pre><code>BIG = [1,2]
+LITTLE = [0,3,4,5]
+clusters = [BIG, LITTLE]
+
+topology = Topology(clusters=clusters)</code></pre>
+<p>
+We can then check the behaviours of the task as follows:
+</p>
+<pre><code>s = SchedAssert(trace_file, topology, execname="cpuhog")</code></pre>
+<p>Assert the switch of task between clusters</p>
+
+<pre><code>s.assertSwitch("cluster",           # Topological Level
+	       BIG,	            # From
+	       LITTLE,              # To
+	       window=(11.5, 12.5)  # Time Window
+)</code></pre>
+
+<p>Assert the duty cycle of the task in a window of time</p>
+
+<pre>
+<code>s.assertDutyCycle(10,		     # Expected Value of DutyCycle (%)
+		 between_threshold,  # A boolean comparator function
+		 window=(0, 1)      # Window of time
+)</code>
+</pre>
+
+</p>
 <p>A notebook explaining the usage of the framework for asserting the deadline scheduler behaviours can be seen <a href="https://rawgit.com/sinkap/0abbcc4918eb228b8887/raw/a1b4d6e0079f4ea0368d595d335bc340616501ff/SchedDeadline.html">here</a></p>
 
       <footer class="site-footer">
@@ -232,6 +255,6 @@ for the tasks under consideration. (in IPython notebooks).</p>
 
     </section>
 
-  
+
   </body>
 </html>
