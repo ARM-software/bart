@@ -15,6 +15,8 @@
 
 """Initialization for bart"""
 
+__version__ = "1.0.0"
+
 import bart.sched
 import bart.common
 import bart.thermal
