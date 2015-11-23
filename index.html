@@ -26,26 +26,28 @@
 <a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is Behavioural Analysis?</h1>
 
 <p>
-Behavioural Analysis involves the expressing the general expectation of the state of the system while targeting a single or set of heuristics. This is particularly helpful when
-there are large number of factors that can change the behaviour of the system and testing all permutations of these input parameters is impossible. In such a scenario an assertion
-of the final expectation can be useful in managing performance and regression.
+Behavioural analysis of a given system requires building an understanding of the overall system state relative to the state of specific heuristics of interest.
+With such an understanding, a technique to automatically detect expected state changes in response to varying input parameters is very valuable. This is especially true when there are a large
+number of factors that can change the behaviour of the system and testing all possible permutations of these factors is hard. Presented here is a toolkit that provides an assertion 
+based mechanism to help evaluate system performance and correct operation.
 </p>
 
-<p>The Behavioural Analysis and Regression Toolkit is based on <a href="https://arm-software.github.io/trappy">TRAPpy</a>. The primary goal is to assert behaviours using the FTrace output from the kernel</p>
+<p>The Behavioural Analysis and Regression Toolkit is based on <a href="https://arm-software.github.io/trappy">TRAPpy</a>. The toolkit is targeted at the Linux kernel and it's primary goal is 
+to help assert behaviours of interest using the FTrace output from the Linux kernel</p>
 
 <h1>
 <a id="target-audience" class="anchor" href="#target-audience" aria-hidden="true"><span class="octicon octicon-link"></span></a>Target Audience</h1>
 
-<p>The framework is designed to cater to a wide range of audience. Aiding developers as well as automating
-the testing of "difficult to test" behaviours.</p>
+<p>The framework caters to a wide range of users spanning developers interested in deep observation of system behaviours as well as test engineers interested in automating
+the testing of "difficult to test" system behaviours.</p>
 <ul><a id="kernel-developers" class="anchor" href="#kernel-developers" aria-hidden="true"><span class="octicon octicon-link"></span></a><b>Kernel Developers:</b>
 Making sure that the code that you are writing is doing the right thing.
 </ul>
 <ul>
-<a id="performance-engineers" class="anchor" href="#performance-engineers" aria-hidden="true"><span class="octicon octicon-link"></span></a><b>Performance Engineers:</b> Plotting/Asserting performance behaviours between different revisions of the kernel
+<a id="performance-engineers" class="anchor" href="#performance-engineers" aria-hidden="true"><span class="octicon octicon-link"></span></a><b>Performance Engineers:</b> Plotting/Asserting performance behaviours between different revisions of the kernel.
 </ul>
 <ul>
-<a id="quality-assurancerelease-engineers" class="anchor" href="#quality-assurancerelease-engineers" aria-hidden="true"><span class="octicon octicon-link"></span></a><b>Quality Assurance/Release Engineers: </b> Verifying behaviours when different components/patches are integrated
+<a id="quality-assurancerelease-engineers" class="anchor" href="#quality-assurancerelease-engineers" aria-hidden="true"><span class="octicon octicon-link"></span></a><b>Quality Assurance/Release Engineers: </b> Verifying behaviours when different components/patches are integrated.
 </ul>
 
 
@@ -78,16 +80,16 @@ It is required if you plan to use interactive plotting in BART.</p>
 <a id="trace-analysis-language" class="anchor" href="#trace-analysis-language" aria-hidden="true"><span class="octicon octicon-link"></span></a>Trace Analysis Language</h1>
 
 
-<p>BART also provides a generic Trace Analysis Language, which allows the user to construct complex relation statements on trace data and assert their expected behaviours. The usage of the Analyzer module can be seen for the thermal behaviours <a href="https://github.com/ARM-software/bart/blob/master/notebooks/thermal/Thermal.ipynb">here</a></p>
+<p>BART also provides a generic Trace Analysis Language, which allows the user to construct complex relation statements on Linux kernel trace data and assert their expected behaviours. As an example, the usage of this language's Analyzer module can be seen for evaluating thermal behaviours with the Linux kernel's thermal management framework<a href="https://github.com/ARM-software/bart/blob/master/notebooks/thermal/Thermal.ipynb">here</a></p>
 
 <h1>
 <a id="specialized-modules" class="anchor" href="#specialized-modules" aria-hidden="true"><span class="octicon octicon-link"></span></a>Specialized Modules</h1>
-Apart from the generic Trace Analysis Language, BART provides certain subsystem specific assertions. The goal is to increase the specialization across other subsystems within the kernel.
+Apart from the generic Trace Analysis Language, BART provides certain subsystem specific assertion rules. The goal is to increase the specialization across other subsystems within the Linux kernel.
 
 <h2>
 <a id="thermal-assertions" class="anchor" href="#thermal-assertions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Thermal Assertions</h2>
 <p>
-This module provides assertions specific to the thermal subsystem and the goal is to assert the temperature control achieved and use these assertions for potential regressions in temperature control.One interesting assertion is, <code>assertThermalResidency</code> which accepts a temperature range and checks if the time spent in the given temperature is between expected limits.
+This module provides assertions specific to the thermal subsystem and the goal is to assert the temperature control achieved and use these assertions for potential regressions in temperature control. One interesting assertion is, <code>assertThermalResidency</code> which accepts a temperature range and checks if the time spent in the given temperature is between expected limits.
 </p>
 <pre><code>assertThermalResidency(between_threshold,     # A boolean function that compares the
    					      # result with the expected value
@@ -103,10 +105,10 @@ This module provides assertions specific to the thermal subsystem and the goal i
 <a id="scheduler-assertions" class="anchor" href="#scheduler-assertions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Scheduler Assertions</h2>
 
 <p>
-The Linux scheduler is extremely complicated and susceptible to regressions. Fixing or adding one area of the scheduler could have unknown and subtle repercussions
-in a different heuristic. We have added a scheduler specific module which allows the developer to assert and the calculate various parameters like the
-duty cycle, period, execution time, residency over a CPU or a cluster for a test workload. It also features an API assertion to check if a task switched
-between two CPUs/Clusters in a given window of time. Here is a short example to show how it works.
+The Linux scheduler is complicated and susceptible to regressions over kernel revisions. Fixing or adding one area of the scheduler could have unknown and subtle repercussions
+in a different heuristic. We have added a scheduler specific module which allows developers to assert points of interest and then calculate various parameters like the
+duty cycle, period, execution time, residency of tasks over a CPU or a cluster for a test workload. It also features an assertion API to check if a task context switched
+between two CPUs/Clusters in a given window of time. Here is a short example.
 </p>
 <p>Consider a task, <code>cpuhog</code>, which has alternate phases of high and low duty cycles:</p>
 
@@ -213,7 +215,7 @@ between two CPUs/Clusters in a given window of time. Here is a short example to 
         </script>
 </div>
 
-<p style="font-size: 12px">Scroll on the Plot area to Zoom. Click and Drag to Pan Zoom</p>
+<p style="font-size: 12px">Scroll on the Plot area to Zoom. Click and Drag to Pan Zoom.</p>
 
 <p>
 We have a dual cluster asymmetric hardware. The topology can be expressed as:
