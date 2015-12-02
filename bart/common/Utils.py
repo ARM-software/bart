@@ -147,11 +147,11 @@ def area_under_curve(series, sign=None, method="trapz", step="post"):
         else:
             raise ValueError("Invalid Value for step: {}".format(step))
 
-        return (values * np.diff(series.index)).sum()
+        return float((values * np.diff(series.index)).sum())
 
     if hasattr(np, method):
         np_integ_method = getattr(np, method)
-        np_integ_method(series.values, series.index)
+        return np_integ_method(series.values, series.index)
     else:
         raise ValueError("Invalid method: {}".format(method))
 
@@ -208,7 +208,7 @@ def interval_sum(series, value=None):
 
     for split in time_splits:
 
-        first_val = series[index[split]]
+        first_val = series.iloc[split]
         check = (first_val == value) if value else first_val
 
         if check and prev != split:
@@ -216,4 +216,4 @@ def interval_sum(series, value=None):
 
         prev = split + 1
 
-    return time
+    return float(time)
