@@ -41,3 +41,60 @@ class TestSignalCompare(TestBART):
                 "event:A > event:B",
                 method="rect"),
             expected)
+
+
+    def test_get_overshoot(self):
+        """Test get_overshoot"""
+
+        A = [0, 0, 0, 3, 3, 0, 0, 0]
+        B = [0, 0, 2, 2, 2, 2, 1, 1]
+
+        run = trappy.Run(".", events=["event"])
+        df = pd.DataFrame({"A": A, "B": B})
+        run.event.data_frame = df
+
+        s = SignalCompare(run, "event:A", "event:B")
+        expected = (1.5, 2.0 / 7)
+        self.assertEqual(
+            s.get_overshoot(method="rect"),
+            expected)
+
+        A = [0, 0, 0, 1, 1, 0, 0, 0]
+        B = [0, 0, 2, 2, 2, 2, 1, 1]
+
+        df = pd.DataFrame({"A": A, "B": B})
+        run.event.data_frame = df
+        s = SignalCompare(run, "event:A", "event:B")
+
+        expected = (float("inf"), 0.0)
+        self.assertEqual(
+            s.get_overshoot(method="rect"),
+            expected)
+
+    def test_get_undershoot(self):
+        """Test get_undershoot"""
+
+        A = [0, 0, 0, 1, 1, 1, 1, 1]
+        B = [2, 2, 2, 2, 2, 2, 2, 2]
+
+        run = trappy.Run(".", events=["event"])
+        df = pd.DataFrame({"A": A, "B": B})
+        run.event.data_frame = df
+
+        s = SignalCompare(run, "event:A", "event:B")
+        expected = (4.0 / 14.0, 1.0)
+        self.assertEqual(
+            s.get_undershoot(method="rect"),
+            expected)
+
+        A = [3, 3, 3, 3, 3, 3, 3, 3]
+        B = [2, 2, 2, 2, 2, 2, 1, 1]
+
+        df = pd.DataFrame({"A": A, "B": B})
+        run.event.data_frame = df
+        s = SignalCompare(run, "event:A", "event:B")
+
+        expected = (float("inf"), 0.0)
+        self.assertEqual(
+            s.get_undershoot(method="rect"),
+            expected)
