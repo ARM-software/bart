@@ -23,7 +23,7 @@ import trappy
 import itertools
 import math
 from trappy.stats.Aggregator import MultiTriggerAggregator
-from trappy.stats import SchedConf as sconf
+from bart.sched import functions
 from bart.common import Utils
 import numpy as np
 
@@ -57,7 +57,6 @@ class SchedAssert(object):
 
     :param pid: The process ID of the task to be analysed
     :type pid: int
-
     .. note:
 
         One of pid or execname is mandatory. If only execname
@@ -77,7 +76,7 @@ class SchedAssert(object):
         self._pid = self._validate_pid(pid)
         self._aggs = {}
         self._topology = topology
-        self._triggers = sconf.sched_triggers(self._run, self._pid,
+        self._triggers = functions.sched_triggers(self._run, self._pid,
                                               trappy.sched.SchedSwitch)
         self.name = "{}-{}".format(self.execname, self._pid)
 
@@ -85,7 +84,7 @@ class SchedAssert(object):
         """Validate the passed pid argument"""
 
         if not pid:
-            pids = sconf.get_pids_for_process(self._run,
+            pids = functions.get_pids_for_process(self._run,
                                               self.execname)
 
             if len(pids) != 1:
@@ -98,7 +97,7 @@ class SchedAssert(object):
 
         elif self.execname:
 
-            pids = sconf.get_pids_for_process(self._run,
+            pids = functions.get_pids_for_process(self._run,
                                               self.execname)
             if pid not in pids:
                 raise RuntimeError(
@@ -106,7 +105,7 @@ class SchedAssert(object):
                         pid,
                         self.execname))
         else:
-            self.execname = sconf.get_task_name(self._run, pid)
+            self.execname = functions.get_task_name(self._run, pid)
 
         return pid
 
@@ -172,7 +171,7 @@ class SchedAssert(object):
         # Get the index of the node in the level
         node_index = self._topology.get_index(level, node)
 
-        agg = self._aggregator(sconf.residency_sum)
+        agg = self._aggregator(functions.residency_sum)
         level_result = agg.aggregate(level=level, window=window)
 
         node_value = level_result[node_index]
@@ -243,8 +242,8 @@ class SchedAssert(object):
         :return: The first time the task ran across all the CPUs
         """
 
-        agg = self._aggregator(sconf.first_time)
-        result = agg.aggregate(level="all", value=sconf.TASK_RUNNING)
+        agg = self._aggregator(functions.first_time)
+        result = agg.aggregate(level="all", value=functions.TASK_RUNNING)
         return min(result[0])
 
     def getEndTime(self):
@@ -253,9 +252,9 @@ class SchedAssert(object):
             all the CPUs
         """
 
-        agg = self._aggregator(sconf.first_time)
-        agg = self._aggregator(sconf.last_time)
-        result = agg.aggregate(level="all", value=sconf.TASK_RUNNING)
+        agg = self._aggregator(functions.first_time)
+        agg = self._aggregator(functions.last_time)
+        result = agg.aggregate(level="all", value=functions.TASK_RUNNING)
         return max(result[0])
 
     def _relax_switch_window(self, series, direction, window):
@@ -277,8 +276,8 @@ class SchedAssert(object):
             even in the extended window
         """
 
-        series = series[series == sconf.TASK_RUNNING]
-        w_series = sconf.select_window(series, window)
+        series = series[series == functions.TASK_RUNNING]
+        w_series = functions.select_window(series, window)
         start, stop = window
 
         if direction == "left":
@@ -286,7 +285,7 @@ class SchedAssert(object):
                 return w_series.index.values[-1]
             else:
                 start_time = self.getStartTime()
-                w_series = sconf.select_window(
+                w_series = functions.select_window(
                     series,
                     window=(
                         start_time,
@@ -302,7 +301,7 @@ class SchedAssert(object):
                 return w_series.index.values[0]
             else:
                 end_time = self.getEndTime()
-                w_series = sconf.select_window(series, window=(stop, end_time))
+                w_series = functions.select_window(series, window=(stop, end_time))
 
                 if not len(w_series):
                     return None
@@ -344,7 +343,7 @@ class SchedAssert(object):
         from_node_index = self._topology.get_index(level, from_node)
         to_node_index = self._topology.get_index(level, to_node)
 
-        agg = self._aggregator(sconf.csum)
+        agg = self._aggregator(functions.csum)
         level_result = agg.aggregate(level=level)
 
         from_node_result = level_result[from_node_index]
@@ -379,7 +378,7 @@ class SchedAssert(object):
         .. seealso:: :mod:`bart.sched.SchedAssert.SchedAssert.assertRuntime`
         """
 
-        agg = self._aggregator(sconf.residency_sum)
+        agg = self._aggregator(functions.residency_sum)
         run_time = agg.aggregate(level="all", window=window)[0]
 
         if percent:
@@ -470,7 +469,7 @@ class SchedAssert(object):
         .. seealso:: :mod:`bart.sched.SchedAssert.SchedAssert.assertPeriod`
         """
 
-        agg = self._aggregator(sconf.period)
+        agg = self._aggregator(functions.period)
         deltas = agg.aggregate(level="all", window=window)[0]
 
         if not len(deltas):
@@ -586,7 +585,7 @@ class SchedAssert(object):
         .. seealso:: :mod:`bart.sched.SchedAssert.SchedAssert.assertFirstCPU`
         """
 
-        agg = self._aggregator(sconf.first_cpu)
+        agg = self._aggregator(functions.first_cpu)
         result = agg.aggregate(level="cpu", window=window)
         result = list(itertools.chain.from_iterable(result))
 
@@ -619,7 +618,7 @@ class SchedAssert(object):
             :mod:`bart.sched.SchedMultiAssert` class for plotting data
         """
 
-        agg = self._aggregator(sconf.trace_event)
+        agg = self._aggregator(functions.trace_event)
         result = agg.aggregate(level=level, window=window)
         events = []
 

@@ -70,7 +70,8 @@ import trappy
 import numpy as np
 from trappy.stats.Aggregator import MultiTriggerAggregator
 from trappy.stats.Correlator import Correlator
-from trappy.stats import SchedConf as sconf
+from bart.sched import functions
+from trappy.plotter.Utils import listify
 from bart.common import Utils
 
 POSITIVE_TOLERANCE = 0.80
@@ -150,7 +151,7 @@ class SchedMatrix(object):
             trace,
             topology,
             execnames,
-            aggfunc=sconf.csum):
+            aggfunc=functions.csum):
 
         run = Utils.init_run(trace)
         reference_run = Utils.init_run(reference_trace)
@@ -171,12 +172,12 @@ class SchedMatrix(object):
         """Populate the qualifying PIDs from the run"""
 
         if len(self._execnames) == 1:
-            return sconf.get_pids_for_process(run, self._execnames[0])
+            return functions.get_pids_for_process(run, self._execnames[0])
 
         pids = []
 
         for proc in self._execnames:
-            pids += sconf.get_pids_for_process(run, proc)
+            pids += functions.get_pids_for_process(run, proc)
 
         return list(set(pids))
 
@@ -190,7 +191,7 @@ class SchedMatrix(object):
 
             reference_aggs.append(
                 MultiTriggerAggregator(
-                    sconf.sched_triggers(
+                    functions.sched_triggers(
                         reference_run,
                         self._reference_pids[idx],
                         trappy.sched.SchedSwitch
@@ -200,7 +201,7 @@ class SchedMatrix(object):
 
             aggs.append(
                 MultiTriggerAggregator(
-                    sconf.sched_triggers(
+                    functions.sched_triggers(
                         run,
                         self._pids[idx],
                         trappy.sched.SchedSwitch
@@ -222,7 +223,7 @@ class SchedMatrix(object):
             corr = Correlator(
                 ref_result,
                 test_result,
-                corrfunc=sconf.binary_correlate,
+                corrfunc=functions.binary_correlate,
                 filter_gaps=True)
             _, total = corr.correlate(level="cluster")
 

@@ -19,7 +19,8 @@ statistics aggregation framework"""
 import re
 import inspect
 import trappy
-from trappy.stats import SchedConf as sconf
+from bart.sched import functions
+from trappy.plotter.Utils import listify
 from bart.sched.SchedAssert import SchedAssert
 from bart.common import Utils
 
@@ -167,12 +168,12 @@ class SchedMultiAssert(object):
         """Map the input execnames to PIDs"""
 
         if len(self._execnames) == 1:
-            return sconf.get_pids_for_process(self._run, self._execnames[0])
+            return functions.get_pids_for_process(self._run, self._execnames[0])
 
         pids = []
 
         for proc in self._execnames:
-            pids += sconf.get_pids_for_process(self._run, proc)
+            pids += functions.get_pids_for_process(self._run, proc)
 
         return list(set(pids))
 
