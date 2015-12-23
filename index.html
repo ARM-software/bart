@@ -200,13 +200,16 @@ between two CPUs/Clusters in a given window of time. Here is a short example.
 
                     "EventPlot": 'https://cdn.rawgit.com/sinkap/7f89de3e558856b81f10/raw/34ee1291911a81e1d1f25491785df6708e5403be/EventPlot',
                     "d3-tip": "http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3",
-                    "d3": "http://d3js.org/d3.v3.min"
+                    "d3-plotter": 'https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3'
                 },
                 shim: {
-                    "d3-tip": ["d3"],
+                    "d3-plotter" : {
+                        "exports" : "d3"
+                    },
+                    "d3-tip": ["d3-plotter"],
                     "EventPlot": {
 
-                        "deps": ["d3-tip", "d3" ],
+                        "deps": ["d3-tip", "d3-plotter" ],
                         "exports":  "EventPlot"
                     }
                 }
