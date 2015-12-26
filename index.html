@@ -8,8 +8,10 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
   </head>
   <body>
     <section class="page-header">
@@ -196,15 +198,18 @@ between two CPUs/Clusters in a given window of time. Here is a short example.
 
                 paths: {
 
-                    "EventPlot": "https://rawgit.com/sinkap/7f89de3e558856b81f10/raw/46144f8f8c5da670c54f826f0c634762107afc66/EventPlot",
+                    "EventPlot": 'https://cdn.rawgit.com/sinkap/7f89de3e558856b81f10/raw/34ee1291911a81e1d1f25491785df6708e5403be/EventPlot',
                     "d3-tip": "http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3",
-                    "d3": "http://d3js.org/d3.v3.min"
+                    "d3-plotter": 'https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3'
                 },
                 shim: {
-                    "d3-tip": ["d3"],
+                    "d3-plotter" : {
+                        "exports" : "d3"
+                    },
+                    "d3-tip": ["d3-plotter"],
                     "EventPlot": {
 
-                        "deps": ["d3-tip", "d3" ],
+                        "deps": ["d3-tip", "d3-plotter" ],
                         "exports":  "EventPlot"
                     }
                 }
