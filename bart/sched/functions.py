@@ -298,7 +298,7 @@ def residency_sum(series, window=None):
             running = select_window(org_series.cumsum(), window)
             if running.values[0] == TASK_RUNNING and running.values[-1] == TASK_RUNNING:
                 return window[1] - window[0]
-        except Exception,e:
+        except Exception as e:
             pass
 
     if len(s_in) != len(s_out):
