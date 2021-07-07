@@ -15,7 +15,11 @@
 """A thermal specific library to assert certain thermal
 behaviours
 """
+from __future__ import unicode_literals
+from __future__ import division
+from __future__ import print_function
 
+from builtins import object
 from bart.common import Utils
 from bart.common.Analyzer import Analyzer
 import numpy as np
@@ -78,7 +82,7 @@ class ThermalAssert(object):
 
             if percent:
                 result[pivot] = (
-                    result[pivot] * 100.0) / self._ftrace.get_duration()
+                    (result[pivot] * 100.0)/self._ftrace.get_duration())
 
         return result
 

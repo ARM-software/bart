@@ -63,8 +63,13 @@ evaluated execution
     assertSiblings(A3, 2, operator.eq)
     assertSiblings(A4, 2, operator.eq)
 """
+from __future__ import unicode_literals
+from __future__ import division
+from __future__ import print_function
 
-
+from builtins import str
+from builtins import range
+from builtins import object
 import sys
 import trappy
 import numpy as np

@@ -45,7 +45,11 @@
         - :code:`"trappy.event.class:event_column"`
 
 """
+from __future__ import division
+from __future__ import unicode_literals
+from __future__ import print_function
 
+from builtins import object
 from trappy.stats.grammar import Parser
 from trappy.stats import StatConf
 from bart.common.Utils import area_under_curve, interval_sum

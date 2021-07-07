@@ -18,7 +18,11 @@ based on the grammar defined in trappy.stats.grammar. The class is
 also intended to have aggregator based functionality. This is not
 implemented yet.
 """
+from __future__ import unicode_literals
+from __future__ import division
+from __future__ import print_function
 
+from builtins import object
 from trappy.stats.grammar import Parser
 import warnings
 import numpy as np

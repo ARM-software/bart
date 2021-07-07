@@ -12,14 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from __future__ import unicode_literals
+from __future__ import division
+from __future__ import print_function
 
 from bart.sched.pelt import *
 from hypothesis import given
 from hypothesis.strategies import integers, tuples, none, one_of
-from sys import maxint
 from utils_tests import TestBART
+import sys
+import math
 
-# Required to use `int` not `long` henx ma=maxint
+# Required to use `int` not `long` on Python 2 ,hence ma=maxint
+maxint = getattr(sys, 'maxint', sys.maxsize)
 nonneg_ints = lambda mi=0, ma=maxint: integers(min_value=mi, max_value=ma)
 
 # Generate a Simulator
@@ -36,7 +41,7 @@ periodic_task_args_samples = lambda: tuples(
     nonneg_ints(),  # start_sample
     nonneg_ints(),  # run_samples
     none(),         # duty_cycle_pct
-).filter(lambda (period, _, run, __): run <= period)
+).filter(lambda period___run___: period___run___[2] <= period___run___[0])
 
 # Generate args for PeriodicTask::__init__ args using duty_cycle_pct
 periodic_task_args_pct = lambda: tuples(
@@ -92,7 +97,7 @@ class TestSimulator(TestBART):
         signal = sim.getSignal(task, start_s, end_s)
 
         # Should start no earlier than 1 sample before start_s
-        earliest_start = min(0, start_s - (sim._sample_us / 1.e6))
+        earliest_start = min(0, start_s - (sim._sample_us/1.e6))
         self.assertGreaterEqual(signal.index[0], earliest_start)
         # Should start no later than start_s
         self.assertLessEqual(signal.index[0], start_s)
@@ -100,7 +105,7 @@ class TestSimulator(TestBART):
         # Should start no earlier than end_s
         self.assertGreaterEqual(signal.index[-1], end_s)
         # Should end no later than 1 sample after end_s
-        latest_start = end_s + (sim._sample_us / 1.e6)
+        latest_start = end_s + (sim._sample_us/1.e6)
         self.assertLessEqual(signal.index[-1], latest_start)
 
     @given(periodic_task_args(), simulator_args())
@@ -113,7 +118,7 @@ class TestSimulator(TestBART):
         signal = sim.getSignal(task)
         stats = sim.getStats()
 
-        expected_mean = (task.duty_cycle_pct * 1024) / 100
+        expected_mean = (task.duty_cycle_pct * 1024)/100
 
-        self.assertEqual(stats.pelt_avg, expected_mean)
+        self.assertEqual(math.floor(stats.pelt_avg), math.floor(expected_mean))
 

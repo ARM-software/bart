@@ -56,6 +56,9 @@ can then be aggregated by specifying a Topology
 
 .. seealso:: :mod:`trappy.stats.Topology.Topology`
 """
+from __future__ import division
+from __future__ import unicode_literals
+from __future__ import print_function
 
 import numpy as np
 from trappy.stats.Trigger import Trigger
@@ -180,7 +183,7 @@ def filter_small_gaps(series):
     """
 
     start = None
-    for index, value in series.iteritems():
+    for index, value in series.items():
 
         if value == SCHED_SWITCH_IN:
             if start == None:
@@ -433,7 +436,7 @@ def binary_correlate(series_x, series_y):
     agree = len(series_x[series_x == series_y])
     disagree = len(series_x[series_x != series_y])
 
-    return (agree - disagree) / float(len(series_x))
+    return (agree - disagree) / len(series_x)
 
 def get_pids_for_process(ftrace, execname, cls=None):
     """Get the PIDs for a given process

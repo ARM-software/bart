@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from __future__ import unicode_literals
+from __future__ import division
+from __future__ import print_function
 
 import pandas as pd
 import trappy
@@ -40,7 +43,7 @@ class TestSignalCompare(TestBART):
         trace.add_parsed_event("event", df)
 
         s = SignalCompare(trace, "event:A", "event:B")
-        expected = (1.5, 2.0 / 7)
+        expected = (1.5, 2.0/7)
         self.assertEqual(
             s.conditional_compare(
                 "event:A > event:B",
@@ -58,7 +61,7 @@ class TestSignalCompare(TestBART):
         trace.add_parsed_event("event", df)
 
         s = SignalCompare(trace, "event:A", "event:B")
-        expected = (1.5, 2.0 / 7)
+        expected = (1.5, 2.0/7)
         self.assertEqual(
             s.get_overshoot(method="rect"),
             expected)
@@ -86,7 +89,7 @@ class TestSignalCompare(TestBART):
         trace.add_parsed_event("event", df)
 
         s = SignalCompare(trace, "event:A", "event:B")
-        expected = (4.0 / 14.0, 1.0)
+        expected = (4.0/14.0, 1.0)
         self.assertEqual(
             s.get_undershoot(method="rect"),
             expected)

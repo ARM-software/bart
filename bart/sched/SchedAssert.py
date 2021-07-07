@@ -18,7 +18,11 @@
 The analysis is based on TRAPpy's statistics framework and is potent enough
 to aggregate statistics over processor hierarchies.
 """
+from __future__ import division
+from __future__ import unicode_literals
+from __future__ import print_function
 
+from builtins import object
 import trappy
 import itertools
 import math

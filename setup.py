@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #    Copyright 2015-2016 ARM Limited
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +15,8 @@
 #
 from setuptools import setup, find_packages
 
-
-execfile("bart/version.py")
+with open("bart/version.py") as f:
+    exec(f.read())
 
 LONG_DESCRIPTION = """Behavioural Analysis involves the expressing the general
 expectation of the state of the system while targeting a single or set of heuristics.
@@ -30,8 +30,10 @@ to assert behaviours using the FTrace output from the kernel
 """
 
 REQUIRES = [
-    "TRAPpy>=3.0",
+    "pandas",
+    "trappy>=3.0",
     "hypothesis>=3.0",
+    "future",
 ]
 
 setup(name='bart-py',
@@ -51,6 +53,7 @@ setup(name='bart-py',
           "License :: OSI Approved :: Apache Software License",
           "Operating System :: POSIX :: Linux",
           "Programming Language :: Python :: 2.7",
+          "Programming Language :: Python :: 3",
           # As we depend on trace data from the Linux Kernel/FTrace
           "Topic :: System :: Operating System Kernels :: Linux",
           "Topic :: Scientific/Engineering :: Visualization"
